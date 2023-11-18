@@ -1,13 +1,14 @@
 import argparse
+import pandas as pd
 
 def load_data(file_path):
     # TODO: Load data from CSV file
-
+    df = pd.read_csv(file_path)
     return df
 
 def clean_data(df):
     # TODO: Handle missing values, outliers, etc.
-
+    
     return df_clean
 
 def preprocess_data(df):
@@ -42,5 +43,7 @@ def main(input_file, output_file):
     save_data(df_processed, output_file)
 
 if __name__ == "__main__":
+    print(load_data('data/gen_DE_B01.csv'))
+    exit(0)
     args = parse_arguments()
     main(args.input_file, args.output_file)
