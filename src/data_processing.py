@@ -8,7 +8,8 @@ def load_data(file_path):
 
 def clean_data(df):
     # TODO: Handle missing values, outliers, etc.
-    
+    # Drop rows with any missing values
+    df_clean = df.dropna()
     return df_clean
 
 def preprocess_data(df):
