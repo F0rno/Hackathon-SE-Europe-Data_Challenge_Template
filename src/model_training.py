@@ -3,10 +3,11 @@ import argparse
 
 def load_data(file_path):
     # TODO: Load processed data from CSV file
-    return df
+    return pd.read_csv(file_path)
 
 def split_data(df):
     # TODO: Split data into training and validation sets (the test set is already provided in data/test_data.csv)
+
     return X_train, X_val, y_train, y_val
 
 def train_model(X_train, y_train):

@@ -3,7 +3,7 @@ import argparse
 
 def load_data(file_path):
     # TODO: Load test data from CSV file
-    return df
+    return pd.read_csv(file_path)
 
 def load_model(model_path):
     # TODO: Load the trained model
