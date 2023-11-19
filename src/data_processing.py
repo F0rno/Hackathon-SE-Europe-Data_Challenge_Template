@@ -15,6 +15,8 @@ def delete_fossil_data():
             continue
         if 'load' in csv_file.split('_'):
             continue
+        if 'processed' in csv_file.split('_'):
+            continue
         if csv_file.split('_')[-1].replace('.csv', '') in green_energy_codes:
             continue 
         remove('data/' + csv_file)    
@@ -26,6 +28,8 @@ def load_data(data_path):
         if not isfile(data_path + file_path):
             continue
         if 'test' in file_path.split('.'):
+            continue
+        if 'processed' in file_path.split('_'):
             continue
         df = pd.read_csv(data_path + file_path)
         file_path_splited = file_path.split('_')
@@ -157,7 +161,6 @@ def save_data(data_processed, output_file):
             df['NE_Load'] = data_processed[country]['load']
     # Save the DataFrame in a csv file
     df.to_csv(output_file, index=False)                
-    
 
 def parse_arguments():
     parser = argparse.ArgumentParser(description='Data processing script for Energy Forecasting Hackathon')
@@ -182,10 +185,12 @@ def main(input_folder, output_file):
     save_data(df_processed, output_file)
 
 if __name__ == "__main__":
+    delete_fossil_data()
     df = load_data('./data/')
     df_clean = clean_data(df)
     df_processed = preprocess_data(df_clean)
     save_data(df_processed, 'data/processed_data.csv')
     exit(0)
-    args = parse_arguments()
-    main(args.input_folder, args.output_file)
+    
+    #args = parse_arguments()
+    #main(args.input_folder, args.output_file)
