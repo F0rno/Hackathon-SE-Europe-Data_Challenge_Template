@@ -28,11 +28,14 @@ def load_data(data_path):
         dfs.append(pd.read_csv(data_path + file_path))
     return dfs
 
-def clean_data(df):
+def clean_data(dfs):
     # TODO: Handle missing values, outliers, etc.
     # Drop rows with any missing values
-    df_clean = df.dropna()
-    return df_clean
+    dfs_clean = []
+    for dfs in dfs:
+        dfs_clean.append(dfs.dropna())
+    print(dfs_clean[0])
+    return dfs_clean
 
 def preprocess_data(df):
     # TODO: Generate new features, transform existing features, resampling, etc.
@@ -66,7 +69,7 @@ def main(input_file, output_file):
     save_data(df_processed, output_file)
 
 if __name__ == "__main__":
-    load_data('./data/')
+    clean_data(load_data('./data/'))
     exit(0)
     args = parse_arguments()
     main(args.input_file, args.output_file)
