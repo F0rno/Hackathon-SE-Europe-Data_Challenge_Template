@@ -186,11 +186,10 @@ def main(input_folder, output_file):
 
 if __name__ == "__main__":
     delete_fossil_data()
-    df = load_data('./data/')
-    df_clean = clean_data(df)
-    df_processed = preprocess_data(df_clean)
-    save_data(df_processed, 'data/processed_data.csv')
-    exit(0)
-    
-    #args = parse_arguments()
-    #main(args.input_folder, args.output_file)
+    #df = load_data('./data/')
+    #df_clean = clean_data(df)
+    #df_processed = preprocess_data(df_clean)
+    #save_data(df_processed, 'data/processed_data.csv')
+    #exit(0)
+    args = parse_arguments()
+    main(args.input_folder, args.output_file)
