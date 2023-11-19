@@ -34,15 +34,15 @@ def load_data(data_path):
             df['country'] = file_path_splited[1]
         # Adding the country initials in load_data
         if file_path_splited[-1].replace('.csv', '') in country_initials:
-            df['country'] = file_path_splited[-1]
+            df['country'] = file_path_splited[-1].replace('.csv', '')
         dfs.append(df)
     return dfs
 
 def clean_data(dfs):
     # TODO: Handle missing values, outliers, etc.
-    for dfs in dfs:
+    for df in dfs:
         # Drop rows with any missing values
-        dfs.dropna()
+        df.dropna()
     return dfs
 
 def preprocess_data(dfs):
@@ -58,13 +58,30 @@ def preprocess_data(dfs):
     #    NL: 8 # Netherlands
     #}
     # TODO: Generate new features, transform existing features, resampling, etc.
-
-    # Search for the country code in the file name to get the country data: gen and load
-    
+    data = {
+        "SP": {
+            "gen": [],
+            "load": []
+        },
+    }
+    # Search for the country initial in the columns to get the country data: gen and load    
+    """
+    for df in dfs:
+        country = df['country'][0]
+        if 'quantity' in df.columns:
+            # Sum all the quantity of the country by time lapse hour
+            # Iterate through the DataFrame in chunks of 4 rows
+            for index, chunk in df.groupby(df.index // 4):
+                # Sum the quantity of the country in the chunk
+                quantity_sum = chunk['quantity'].sum()
+                data[country]['gen'].append(quantity_sum)
+        if 'Load' in df.columns:
+            pass
+    """
 
     # Acumulate data of the country like (quantity), (load) by time lapse hour
     # Add the data country to a all_data.cvs file
-    return df_processed
+    #return df_processed
 
 def save_data(df, output_file):
     # TODO: Save processed data to a CSV file
@@ -73,7 +90,7 @@ def save_data(df, output_file):
 def parse_arguments():
     parser = argparse.ArgumentParser(description='Data processing script for Energy Forecasting Hackathon')
     parser.add_argument(
-        '--input_file',
+        '--input_folder',
         type=str,
         default='data/raw_data.csv',
         help='Path to the raw data file to process'
@@ -86,14 +103,17 @@ def parse_arguments():
     )
     return parser.parse_args()
 
-def main(input_file, output_file):
-    df = load_data(input_file)
+def main(input_folder, output_file):
+    df = load_data(input_folder)
     df_clean = clean_data(df)
     df_processed = preprocess_data(df_clean)
     save_data(df_processed, output_file)
 
 if __name__ == "__main__":
-    load_data('./data/')
+    df = load_data('./data/')
+    df_clean = clean_data(df)
+    print(df_clean)
+    preprocess_data(df_clean)
     exit(0)
     args = parse_arguments()
-    main(args.input_file, args.output_file)
+    main(args.input_folder, args.output_file)
