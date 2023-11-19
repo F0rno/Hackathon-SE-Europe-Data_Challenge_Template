@@ -17,10 +17,16 @@ def delete_fossil_data():
             continue 
         remove('data/' + csv_file)    
 
-def load_data(file_path):
+def load_data(data_path):
     # TODO: Load data from CSV file
-    df = pd.read_csv(file_path)
-    return df
+    dfs = []
+    for file_path in listdir(data_path):
+        if not isfile(data_path + file_path):
+            continue
+        if 'test' in file_path.split('.'):
+            continue
+        dfs.append(pd.read_csv(data_path + file_path))
+    return dfs
 
 def clean_data(df):
     # TODO: Handle missing values, outliers, etc.
@@ -60,7 +66,7 @@ def main(input_file, output_file):
     save_data(df_processed, output_file)
 
 if __name__ == "__main__":
-    delete_fossil_data()
+    load_data('./data/')
     exit(0)
     args = parse_arguments()
     main(args.input_file, args.output_file)
