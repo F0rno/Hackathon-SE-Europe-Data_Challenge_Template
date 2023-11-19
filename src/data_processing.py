@@ -67,39 +67,39 @@ def preprocess_data(dfs):
     data_processed = {
         "SP": {
             "gen": [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-            "load": []
+            "load": [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
         },
         "UK": {
             "gen": [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-            "load": []
+            "load": [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
         },
         "DE": {
             "gen": [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-            "load": []
+            "load": [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
         },
         "DK": {
             "gen": [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-            "load": []
+            "load": [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
         },
         "HU": {
             "gen": [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-            "load": []
+            "load": [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
         },
         "SE": {
             "gen": [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-            "load": []
+            "load": [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
         },
         "IT": {
             "gen": [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-            "load": []
+            "load": [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
         },
         "PO": {
             "gen": [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-            "load": []
+            "load": [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
         },
         "NE": {
             "gen": [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-            "load": []
+            "load": [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
         }
     }
     # Search for the country initial in the columns to get the country data: gen and load    
@@ -119,15 +119,45 @@ def preprocess_data(dfs):
             for index, chunk in df.groupby(df.index // 4):
                 # Sum the load of the country in the chunk
                 load_sum = chunk['Load'].sum()
-                data_processed[country]['load'].append(load_sum)
+                data_processed[country]['load'][index % 24] = load_sum
     return data_processed
 
-def save_data(df, output_file):
+def save_data(data_processed, output_file):
     # TODO: Save processed data to a CSV file
-    # Create a all_data.cvs file with this format
-    # ,green_energy_SP,green_energy_UK,green_energy_DE,green_energy_DK,green_energy_HU,green_energy_SE,green_energy_IT,green_energy_PO,green_energy_NL,SP_Load,UK_Load,DE_Load,DK_Load,HU_Load,SE_Load,IT_Load,PO_Load
-    # and save the data in the file
-    pass
+    # Create the DataFrame
+    df = pd.DataFrame(columns=['green_energy_SP', 'green_energy_UK', 'green_energy_DE', 'green_energy_DK', 'green_energy_HU', 'green_energy_SE', 'green_energy_IT', 'green_energy_PO', 'green_energy_NE', 'SP_Load', 'UK_Load', 'DE_Load', 'DK_Load', 'HU_Load', 'SE_Load', 'IT_Load', 'PO_Load', 'NE_Load'])
+    # Iterate through the data_processed dictionary
+    for country in data_processed:
+        if country == 'SP':
+            df['green_energy_SP'] = data_processed[country]['gen']
+            df['SP_Load'] = data_processed[country]['load']
+        elif country == 'UK':
+            df['green_energy_UK'] = data_processed[country]['gen']
+            df['UK_Load'] = data_processed[country]['load']
+        elif country == 'DE':
+            df['green_energy_DE'] = data_processed[country]['gen']
+            df['DE_Load'] = data_processed[country]['load']
+        elif country == 'DK':
+            df['green_energy_DK'] = data_processed[country]['gen']
+            df['DK_Load'] = data_processed[country]['load']
+        elif country == 'HU':
+            df['green_energy_HU'] = data_processed[country]['gen']
+            df['HU_Load'] = data_processed[country]['load']
+        elif country == 'SE':
+            df['green_energy_SE'] = data_processed[country]['gen']
+            df['SE_Load'] = data_processed[country]['load']
+        elif country == 'IT':
+            df['green_energy_IT'] = data_processed[country]['gen']
+            df['IT_Load'] = data_processed[country]['load']
+        elif country == 'PO':
+            df['green_energy_PO'] = data_processed[country]['gen']
+            df['PO_Load'] = data_processed[country]['load']
+        elif country == 'NE':
+            df['green_energy_NE'] = data_processed[country]['gen']
+            df['NE_Load'] = data_processed[country]['load']
+    # Save the DataFrame in a csv file
+    df.to_csv(output_file, index=False)                
+    
 
 def parse_arguments():
     parser = argparse.ArgumentParser(description='Data processing script for Energy Forecasting Hackathon')
@@ -155,7 +185,7 @@ if __name__ == "__main__":
     df = load_data('./data/')
     df_clean = clean_data(df)
     df_processed = preprocess_data(df_clean)
-    print(df_processed)
+    save_data(df_processed, 'data/processed_data.csv')
     exit(0)
     args = parse_arguments()
     main(args.input_folder, args.output_file)
