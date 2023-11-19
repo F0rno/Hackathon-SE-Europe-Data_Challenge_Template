@@ -3,7 +3,7 @@ import pandas as pd
 from os import listdir, remove
 from os.path import isfile
 
-country_initials = ['SP', 'UK', 'DE', 'DK', 'HU', 'SE', 'IT', 'PO', 'NL']
+country_initials = ['SP', 'UK', 'DE', 'DK', 'HU', 'SE', 'IT', 'PO', 'NE']
 
 def delete_fossil_data():
     green_energy_codes = ['B09', 'B10', 'B11', 'B12', 'B13', 'B14', 'B15', 'B16', 'B18', 'B19']
@@ -40,9 +40,15 @@ def load_data(data_path):
 
 def clean_data(dfs):
     # TODO: Handle missing values, outliers, etc.
-    for df in dfs:
+    df_index_to_delete = []
+    for df_index, df in enumerate(dfs):
+        if df.empty:
+            df_index_to_delete.append(df_index)
         # Drop rows with any missing values
         df.dropna()
+    # Delete empty DataFrames
+    for index in df_index_to_delete:
+        dfs.pop(index)
     return dfs
 
 def preprocess_data(dfs):
@@ -65,22 +71,25 @@ def preprocess_data(dfs):
         },
     }
     # Search for the country initial in the columns to get the country data: gen and load    
-    """
     for df in dfs:
         country = df['country'][0]
+        if country is not 'SP':
+            continue
         if 'quantity' in df.columns:
             # Sum all the quantity of the country by time lapse hour
             # Iterate through the DataFrame in chunks of 4 rows
             for index, chunk in df.groupby(df.index // 4):
                 # Sum the quantity of the country in the chunk
                 quantity_sum = chunk['quantity'].sum()
+                print(quantity_sum)
                 data[country]['gen'].append(quantity_sum)
         if 'Load' in df.columns:
             pass
-    """
+    
 
     # Acumulate data of the country like (quantity), (load) by time lapse hour
     # Add the data country to a all_data.cvs file
+    print(data)
     #return df_processed
 
 def save_data(df, output_file):
