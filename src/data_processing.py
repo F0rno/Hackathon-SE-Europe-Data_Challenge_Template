@@ -61,39 +61,72 @@ def preprocess_data(dfs):
     #    SE: 4, # Sweden
     #    IT: 6, # Italy
     #    PO: 7, # Poland
-    #    NL: 8 # Netherlands
+    #    NE: 8 # Netherlands
     #}
     # TODO: Generate new features, transform existing features, resampling, etc.
-    data = {
+    data_processed = {
         "SP": {
-            "gen": [],
+            "gen": [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
             "load": []
         },
+        "UK": {
+            "gen": [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+            "load": []
+        },
+        "DE": {
+            "gen": [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+            "load": []
+        },
+        "DK": {
+            "gen": [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+            "load": []
+        },
+        "HU": {
+            "gen": [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+            "load": []
+        },
+        "SE": {
+            "gen": [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+            "load": []
+        },
+        "IT": {
+            "gen": [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+            "load": []
+        },
+        "PO": {
+            "gen": [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+            "load": []
+        },
+        "NE": {
+            "gen": [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+            "load": []
+        }
     }
     # Search for the country initial in the columns to get the country data: gen and load    
     for df in dfs:
         country = df['country'][0]
-        if country is not 'SP':
-            continue
         if 'quantity' in df.columns:
             # Sum all the quantity of the country by time lapse hour
             # Iterate through the DataFrame in chunks of 4 rows
             for index, chunk in df.groupby(df.index // 4):
                 # Sum the quantity of the country in the chunk
                 quantity_sum = chunk['quantity'].sum()
-                print(quantity_sum)
-                data[country]['gen'].append(quantity_sum)
+                # Access the 24 hours list base in the index of the chunk
+                data_processed[country]['gen'][index % 24] = quantity_sum
         if 'Load' in df.columns:
-            pass
-    
-
-    # Acumulate data of the country like (quantity), (load) by time lapse hour
-    # Add the data country to a all_data.cvs file
-    print(data)
-    #return df_processed
+            # Sum all the load of the country by time lapse hour
+            # Iterate through the DataFrame in chunks of 4 rows
+            for index, chunk in df.groupby(df.index // 4):
+                # Sum the load of the country in the chunk
+                load_sum = chunk['Load'].sum()
+                data_processed[country]['load'].append(load_sum)
+    return data_processed
 
 def save_data(df, output_file):
     # TODO: Save processed data to a CSV file
+    # Create a all_data.cvs file with this format
+    # ,green_energy_SP,green_energy_UK,green_energy_DE,green_energy_DK,green_energy_HU,green_energy_SE,green_energy_IT,green_energy_PO,green_energy_NL,SP_Load,UK_Load,DE_Load,DK_Load,HU_Load,SE_Load,IT_Load,PO_Load
+    # and save the data in the file
     pass
 
 def parse_arguments():
@@ -121,8 +154,8 @@ def main(input_folder, output_file):
 if __name__ == "__main__":
     df = load_data('./data/')
     df_clean = clean_data(df)
-    print(df_clean)
-    preprocess_data(df_clean)
+    df_processed = preprocess_data(df_clean)
+    print(df_processed)
     exit(0)
     args = parse_arguments()
     main(args.input_folder, args.output_file)
