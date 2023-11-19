@@ -1,5 +1,21 @@
 import argparse
 import pandas as pd
+from os import listdir, remove
+from os.path import isfile
+
+def delete_fossil_data():
+    green_energy_codes = ['B09', 'B10', 'B11', 'B12', 'B13', 'B14', 'B15', 'B16', 'B18', 'B19']
+    # List cvs files of .data/
+    for csv_file in listdir('./data/'):
+        if not isfile('./data/' + csv_file):
+            continue
+        if 'test' in csv_file.split('.'):
+            continue
+        if 'load' in csv_file.split('_'):
+            continue
+        if csv_file.split('_')[-1].replace('.csv', '') in green_energy_codes:
+            continue 
+        remove('data/' + csv_file)    
 
 def load_data(file_path):
     # TODO: Load data from CSV file
@@ -14,7 +30,7 @@ def clean_data(df):
 
 def preprocess_data(df):
     # TODO: Generate new features, transform existing features, resampling, etc.
-
+    
     return df_processed
 
 def save_data(df, output_file):
@@ -44,7 +60,7 @@ def main(input_file, output_file):
     save_data(df_processed, output_file)
 
 if __name__ == "__main__":
-    print(load_data('data/gen_DE_B01.csv'))
+    delete_fossil_data()
     exit(0)
     args = parse_arguments()
     main(args.input_file, args.output_file)
