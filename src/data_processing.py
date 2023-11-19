@@ -30,12 +30,10 @@ def load_data(data_path):
 
 def clean_data(dfs):
     # TODO: Handle missing values, outliers, etc.
-    # Drop rows with any missing values
-    dfs_clean = []
     for dfs in dfs:
-        dfs_clean.append(dfs.dropna())
-    print(dfs_clean[0])
-    return dfs_clean
+        # Drop rows with any missing values
+        dfs.dropna()
+    return dfs
 
 def preprocess_data(df):
     # TODO: Generate new features, transform existing features, resampling, etc.
