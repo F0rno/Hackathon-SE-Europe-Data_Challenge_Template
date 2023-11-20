@@ -1,13 +1,45 @@
 import pandas as pd
 import argparse
+from sklearn.model_selection import train_test_split
 
 def load_data(file_path):
     # TODO: Load processed data from CSV file
     return pd.read_csv(file_path)
 
 def split_data(df):
-    # TODO: Split data into training and validation sets (the test set is already provided in data/test_data.csv)
-
+    # TODO: Split data into training and validation sets (the test set is already provided in data/test_data.csv)    
+    X = df[[
+        'green_energy_SP', 
+        'green_energy_UK', 
+        'green_energy_DE', 
+        'green_energy_DK', 
+        'green_energy_HU', 
+        'green_energy_SE', 
+        'green_energy_IT', 
+        'green_energy_PO', 
+        'green_energy_NE', 
+        'SP_Load', 
+        'UK_Load', 
+        'DE_Load', 
+        'DK_Load', 
+        'HU_Load', 
+        'SE_Load', 
+        'IT_Load', 
+        'PO_Load', 
+        'NE_Load'
+    ]]
+    y = df[[
+        'SP_Surplus', 
+        'UK_Surplus', 
+        'DE_Surplus', 
+        'DK_Surplus', 
+        'HU_Surplus', 
+        'SE_Surplus', 
+        'IT_Surplus', 
+        'PO_Surplus', 
+        'NE_Surplus'
+    ]]
+    X_train, X_val, y_train, y_val = train_test_split(X, y, test_size=0.2, random_state=42)
     return X_train, X_val, y_train, y_val
 
 def train_model(X_train, y_train):
