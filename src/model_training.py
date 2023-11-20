@@ -51,6 +51,13 @@ def train_model(X_train, y_train):
     model.fit(X_train, y_train)
     return model
 
+def save_test_data(X_val, y_val, file_path):
+    # Make a dataframe with the validation data X and y
+    df = pd.concat([X_val, y_val], axis=1)
+    # Save the dataframe to a CSV file
+    df.to_csv(file_path, index=False)
+    pass
+
 def save_model(model, model_path):
     # TODO: Save your trained model
     # save the model to disk with pickle
@@ -76,6 +83,7 @@ def parse_arguments():
 def main(input_file, model_file):
     df = load_data(input_file)
     X_train, X_val, y_train, y_val = split_data(df)
+    save_test_data(X_val, y_val, 'data/test_data.csv')
     model = train_model(X_train, y_train)
     save_model(model, model_file)
 
