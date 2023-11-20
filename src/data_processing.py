@@ -68,44 +68,23 @@ def preprocess_data(dfs):
     #    NE: 8 # Netherlands
     #}
     # TODO: Generate new features, transform existing features, resampling, etc.
+    # TODO: Make the surplus column and add it to the DataFrame
     data_processed = {
-        "SP": {
-            "gen": [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-            "load": [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
-        },
-        "UK": {
-            "gen": [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-            "load": [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
-        },
-        "DE": {
-            "gen": [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-            "load": [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
-        },
-        "DK": {
-            "gen": [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-            "load": [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
-        },
-        "HU": {
-            "gen": [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-            "load": [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
-        },
-        "SE": {
-            "gen": [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-            "load": [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
-        },
-        "IT": {
-            "gen": [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-            "load": [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
-        },
-        "PO": {
-            "gen": [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-            "load": [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
-        },
-        "NE": {
-            "gen": [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-            "load": [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
-        }
+        "SP": {"gen": [], "load": [], "surplus": []},
+        "UK": {"gen": [], "load": [], "surplus": []},
+        "DE": {"gen": [], "load": [], "surplus": []},
+        "DK": {"gen": [], "load": [], "surplus": []},
+        "HU": {"gen": [], "load": [], "surplus": []},
+        "SE": {"gen": [], "load": [], "surplus": []},
+        "IT": {"gen": [], "load": [], "surplus": []},
+        "PO": {"gen": [], "load": [], "surplus": []},
+        "NE": {"gen": [], "load": [], "surplus": []}
     }
+    # Init 24 hours list with 0
+    for country in data_processed:
+        data_processed[country]['gen'] = [0] * 24
+        data_processed[country]['load'] = [0] * 24
+        data_processed[country]['surplus'] = [0] * 24
     # Search for the country initial in the columns to get the country data: gen and load    
     for df in dfs:
         country = df['country'][0]
@@ -124,6 +103,10 @@ def preprocess_data(dfs):
                 # Sum the load of the country in the chunk
                 load_sum = chunk['Load'].sum()
                 data_processed[country]['load'][index % 24] = load_sum
+    # Calculate the surplus
+    for country in data_processed:
+        for index in range(24):
+            data_processed[country]['surplus'][index] = data_processed[country]['gen'][index] - data_processed[country]['load'][index]
     return data_processed
 
 def save_data(data_processed, output_file):
@@ -185,7 +168,7 @@ def main(input_folder, output_file):
     save_data(df_processed, output_file)
 
 if __name__ == "__main__":
-    delete_fossil_data()
+    #delete_fossil_data()
     #df = load_data('./data/')
     #df_clean = clean_data(df)
     #df_processed = preprocess_data(df_clean)
