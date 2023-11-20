@@ -41,7 +41,7 @@ def split_data(df):
         'PO_Surplus', 
         'NE_Surplus'
     ]]
-    X_train, X_val, y_train, y_val = train_test_split(X, y, test_size=0.2, random_state=42)
+    X_train, X_val, y_train, y_val = train_test_split(X, y, test_size=0.2)
     return X_train, X_val, y_train, y_val
 
 def train_model(X_train, y_train):
@@ -51,9 +51,9 @@ def train_model(X_train, y_train):
     model.fit(X_train, y_train)
     return model
 
-def save_test_data(X_val, y_val, file_path):
+def save_test_data(X_val, file_path):
     # Make a dataframe with the validation data X and y
-    df = pd.concat([X_val, y_val], axis=1)
+    df = pd.concat([X_val], axis=1)
     # Save the dataframe to a CSV file
     df.to_csv(file_path, index=False)
     pass
@@ -83,7 +83,7 @@ def parse_arguments():
 def main(input_file, model_file):
     df = load_data(input_file)
     X_train, X_val, y_train, y_val = split_data(df)
-    save_test_data(X_val, y_val, 'data/test_data.csv')
+    save_test_data(X_val, 'data/test_data.csv')
     model = train_model(X_train, y_train)
     save_model(model, model_file)
 
