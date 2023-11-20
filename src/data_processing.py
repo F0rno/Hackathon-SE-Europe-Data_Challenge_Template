@@ -112,36 +112,73 @@ def preprocess_data(dfs):
 def save_data(data_processed, output_file):
     # TODO: Save processed data to a CSV file
     # Create the DataFrame
-    df = pd.DataFrame(columns=['green_energy_SP', 'green_energy_UK', 'green_energy_DE', 'green_energy_DK', 'green_energy_HU', 'green_energy_SE', 'green_energy_IT', 'green_energy_PO', 'green_energy_NE', 'SP_Load', 'UK_Load', 'DE_Load', 'DK_Load', 'HU_Load', 'SE_Load', 'IT_Load', 'PO_Load', 'NE_Load'])
+    df = pd.DataFrame(columns=[
+        'green_energy_SP', 
+        'green_energy_UK', 
+        'green_energy_DE', 
+        'green_energy_DK', 
+        'green_energy_HU', 
+        'green_energy_SE', 
+        'green_energy_IT', 
+        'green_energy_PO', 
+        'green_energy_NE', 
+        'SP_Load', 
+        'UK_Load', 
+        'DE_Load', 
+        'DK_Load', 
+        'HU_Load', 
+        'SE_Load', 
+        'IT_Load', 
+        'PO_Load', 
+        'NE_Load', 
+        'SP_Surplus',
+        'UK_Surplus',
+        'DE_Surplus',
+        'DK_Surplus',
+        'HU_Surplus',
+        'SE_Surplus',
+        'IT_Surplus',
+        'PO_Surplus',
+        'NE_Surplus'
+    ])
     # Iterate through the data_processed dictionary
     for country in data_processed:
         if country == 'SP':
             df['green_energy_SP'] = data_processed[country]['gen']
             df['SP_Load'] = data_processed[country]['load']
+            df['SP_Surplus'] = data_processed[country]['surplus']
         elif country == 'UK':
             df['green_energy_UK'] = data_processed[country]['gen']
             df['UK_Load'] = data_processed[country]['load']
+            df['UK_Surplus'] = data_processed[country]['surplus']
         elif country == 'DE':
             df['green_energy_DE'] = data_processed[country]['gen']
             df['DE_Load'] = data_processed[country]['load']
+            df['DE_Surplus'] = data_processed[country]['surplus']
         elif country == 'DK':
             df['green_energy_DK'] = data_processed[country]['gen']
             df['DK_Load'] = data_processed[country]['load']
+            df['DK_Surplus'] = data_processed[country]['surplus']
         elif country == 'HU':
             df['green_energy_HU'] = data_processed[country]['gen']
             df['HU_Load'] = data_processed[country]['load']
+            df['HU_Surplus'] = data_processed[country]['surplus']
         elif country == 'SE':
             df['green_energy_SE'] = data_processed[country]['gen']
             df['SE_Load'] = data_processed[country]['load']
+            df['SE_Surplus'] = data_processed[country]['surplus']
         elif country == 'IT':
             df['green_energy_IT'] = data_processed[country]['gen']
             df['IT_Load'] = data_processed[country]['load']
+            df['IT_Surplus'] = data_processed[country]['surplus']
         elif country == 'PO':
             df['green_energy_PO'] = data_processed[country]['gen']
             df['PO_Load'] = data_processed[country]['load']
+            df['PO_Surplus'] = data_processed[country]['surplus']
         elif country == 'NE':
             df['green_energy_NE'] = data_processed[country]['gen']
             df['NE_Load'] = data_processed[country]['load']
+            df['NE_Surplus'] = data_processed[country]['surplus']
     # Save the DataFrame in a csv file
     df.to_csv(output_file, index=False)                
 
