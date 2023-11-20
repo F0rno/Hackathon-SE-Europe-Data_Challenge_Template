@@ -1,6 +1,8 @@
 import pandas as pd
 import argparse
 from sklearn.model_selection import train_test_split
+from sklearn.linear_model import LinearRegression
+from pickle import dump
 
 def load_data(file_path):
     # TODO: Load processed data from CSV file
@@ -44,10 +46,15 @@ def split_data(df):
 
 def train_model(X_train, y_train):
     # TODO: Initialize your model and train it
+    model = LinearRegression()
+    # Train the model on the training data
+    model.fit(X_train, y_train)
     return model
 
 def save_model(model, model_path):
     # TODO: Save your trained model
+    # save the model to disk with pickle
+    dump(model, open(model_path, 'wb'))
     pass
 
 def parse_arguments():
